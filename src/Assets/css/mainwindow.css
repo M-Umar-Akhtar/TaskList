@@ -1,0 +1,35 @@
+.main-container{
+    margin: auto;
+    width: 45%;
+}
+
+.heading-container{
+    margin: 20px 0px;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 0 0 0;
+    color: white
+}
+
+.heading-container h1{
+    font-size: 2.2em;
+    margin: 0;
+}
+
+.add-task-button{
+    width: 25%;
+    height: 45px;
+    border-radius: 18px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    background-color: #865ff5;
+    color: white;
+    box-shadow: 0px 8px 8px rgba(114, 63, 255, 0.363);
+}
+
+.tasks-container{
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
