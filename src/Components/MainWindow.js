@@ -8,17 +8,19 @@ export default function MainWindow() {
     const [showDisplay, setDisplay] = useState(false);
     const [tasksList, setTaskList] = useState([])
     const [currentPosition, setPosition] = useState(0);
-    const [remove,setRemove] = useState(-1);
+    const [remove, setRemove] = useState(-1);
+    const [edit, setEdit] = useState(-1);
+    const [modeOfOperation, setMode] = useState('Add');
 
-    useEffect(() => { setPosition(tasksList.length);}, [tasksList]);
-    useEffect(() => {setTaskList(prevArray => prevArray.filter((item,index)=> index !== remove));setRemove(-1)},[remove])
-
+    useEffect(() => { setPosition(tasksList.length); }, [tasksList]);
+    useEffect(() => { setTaskList(prevArray => prevArray.filter((item) => item.position !== remove)); setRemove(-1) }, [remove])
+    useEffect(() => { setMode('Edit') }, [edit]);
 
     function InputWindow() {
         const [task, setTask] = useState({
             name: "",
             priority: "Low",
-            position: currentPosition
+            position: modeOfOperation === 'Add' ? currentPosition : edit
         })
         const [activeButton, setActive] = useState(2);
 
@@ -40,9 +42,19 @@ export default function MainWindow() {
             setActive(index);
         }
 
-        function addTask(event) {
+        function add_editTask(event) {
             event.preventDefault();
-            setTaskList(prevList => [...prevList, task]);
+            console.log("Adding")
+            modeOfOperation === 'Add' ? (
+                setTaskList(prevList => [...prevList, task])
+            ) : (
+                setTaskList((prevArray) => {
+                    let newArray = [...prevArray];
+                    let index = newArray.findIndex((item) => item.position === edit);
+                    newArray[index] = task;
+                    return newArray;
+                })
+            )
             setDisplay(false)
         }
 
@@ -50,10 +62,10 @@ export default function MainWindow() {
             <div className={"transparent-container " + (showDisplay ? "show" : "hidden")} >
                 <div className="form-container">
                     <div className='subheading-container'>
-                        <h2 style={{color: "white"}}>Add Task</h2>
+                        <h2 style={{ color: "white" }}>{modeOfOperation} Task</h2>
                         <button className="close-button" onClick={() => setDisplay(false)}><i class="fas fa-times"></i></button>
                     </div>
-                    <form onSubmit={addTask}>
+                    <form onSubmit={add_editTask}>
                         <div className='inputs-container'>
                             <label htmlFor="name">
                                 <p>Task</p>
@@ -69,7 +81,7 @@ export default function MainWindow() {
                             </label>
                         </div>
                         <div className='add-button-container'>
-                            <button type="submit" className='add-button'>Add</button>
+                            <button type="submit" className='add-button'>{modeOfOperation}</button>
                         </div>
                     </form>
                 </div>
@@ -80,16 +92,16 @@ export default function MainWindow() {
 
     return (
         <>
-            <InputWindow showDisplay={showDisplay} setDisplay={setDisplay} setTaskList={setTaskList} index={currentPosition} />
+            <InputWindow />
             <div className="main-container">
                 <div className="heading-container">
                     <h1><strong>Task List</strong></h1>
-                    <button className="add-task-button" onClick={() => { setDisplay(true) }}><i class="fas fa-plus" style={{ marginRight: "10px" }}></i> Add Task</button>
+                    <button className="add-task-button" onClick={() => { setDisplay(true); setMode('Add') }}><i class="fas fa-plus" style={{ marginRight: "10px" }}></i> Add Task</button>
                 </div>
                 <div className="tasks-container">
                     {tasksList.length > 0 ? (tasksList.map((task) => {
-                        return <Task name={task.name} priority={task.priority} setRemove={setRemove} position={task.position}/>
-                    })) : (<h2 style={{color:"white"}}>No tasks to display</h2>)}
+                        return <Task name={task.name} priority={task.priority} setRemove={setRemove} position={task.position} setEdit={setEdit} setDisplay={setDisplay} />
+                    })) : (<h2 style={{ color: "white" }}>No tasks to display</h2>)}
                 </div>
             </div>
         </>

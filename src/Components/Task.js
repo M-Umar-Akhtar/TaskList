@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Circle } from 'rc-progress';
 import '../Assets/css/task.css'
 
-export default function Task({ name, priority, setRemove, position }) {
+export default function Task({ name, priority, setRemove, position, setEdit, setDisplay}) {
     const [percentage, setPercentage] = useState(0);
     const status = ["To Do", "In Progress", "Done"];
     const colors = {
@@ -27,8 +27,8 @@ export default function Task({ name, priority, setRemove, position }) {
                 <Circle percent={percentage} strokeWidth="9" strokeColor="#865ff5" trailWidth="9" trailColor='#e5e6e9' style={{width: "30px", height: "30px"}}/>
             </div>
             <div className="edit-div">
-                <i class="fas fa-file-pen" style={{marginRight: "30px",color: "rgb(177, 177, 177)",backgroundColor:"rgb(68, 68, 68)"}}></i>
-                <i class="fas fa-trash-alt" style={{color: "#ff5061",backgroundColor:"rgb(68, 68, 68)"}} onClick={()=>{console.log("removing " + position);setRemove(position)}}></i>
+                <i class="fas fa-file-pen" style={{marginRight: "30px",color: "rgb(177, 177, 177)",backgroundColor:"rgb(68, 68, 68)"}} onClick={()=>{setEdit(position);setDisplay(true)}}></i>
+                <i class="fas fa-trash-alt" style={{color: "#ff5061",backgroundColor:"rgb(68, 68, 68)"}} onClick={()=>{setRemove(position)}}></i>
             </div>
         </div>
     );
